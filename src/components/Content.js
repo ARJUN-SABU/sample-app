@@ -1,5 +1,6 @@
 //packages
 import { useEffect, useState } from "react";
+import GetFetch from "./GetFetch";
 
 //data
 import blogsData from "../data/blogs.json";
@@ -9,6 +10,7 @@ import BlogCard from "./BlogCard";
 
 function Content() {
   const [blogs, setBlogs] = useState(blogsData);
+  // const [loading, setLoading] = useState(true);
 
   const handleBlogRemoval = (id) => {
     setBlogs(blogs.filter((blog) => blog.id != id));
@@ -30,17 +32,24 @@ function Content() {
   //   }
   //   getData();
   // }, []);
-  useEffect(() => {
-    fetch("http://localhost:8000/blogs")
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     fetch("http://localhost:8000/blogs")
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setLoading(false);
+  //         console.log(data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }, 3000);
+  // }, []);
+  let { pending, data } = GetFetch("http://localhost:8000/blogs");
   return (
     <div>
       <h1>Hello I am the content!</h1>
       <p>Here is the list of blogs!</p>
-
+      {pending && <h1>Loading...</h1>}
+      {data && <p>{data.toString()}</p>}
       <div>
         {blogs.map((blog) => (
           <BlogCard
