@@ -10,6 +10,9 @@ import BlogCard from "./BlogCard";
 
 function Content() {
   const [blogs, setBlogs] = useState(blogsData);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [author, setAuthor] = useState("");
   // const [loading, setLoading] = useState(true);
 
   const handleBlogRemoval = (id) => {
@@ -44,13 +47,25 @@ function Content() {
   //   }, 3000);
   // }, []);
   let { pending, data } = GetFetch("http://localhost:8000/blogs");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    let blogData = {
+      title,
+      body,
+      author,
+    };
+
+    console.log(blogData);
+  }
+
   return (
     <div>
       <h1>Hello I am the content!</h1>
       <p>Here is the list of blogs!</p>
       {pending && <h1>Loading...</h1>}
       {data && <p>{data.toString()}</p>}
-      <div>
+      {/* <div>
         {blogs.map((blog) => (
           <BlogCard
             id={blog.id}
@@ -60,6 +75,55 @@ function Content() {
             handleDelete={handleBlogRemoval}
           />
         ))}
+      </div> */}
+
+      <div>
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "300px",
+            padding: "10px 10px",
+          }}
+          onSubmit={handleSubmit}
+        >
+          <label>Blog Title</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          ></input>
+
+          <label>Blog Content</label>
+          <textarea
+            style={{ height: "200px" }}
+            value={body}
+            onChange={(e) => {
+              setBody(e.target.value);
+            }}
+          ></textarea>
+
+          <label>Author</label>
+          <select
+            value={author}
+            onChange={(e) => {
+              setAuthor(e.target.value);
+            }}
+          >
+            <option value="Arjun">Arjun</option>
+            <option value="Brad">Brad</option>
+            <option value="John">John</option>
+            <option value="Muhammed">Muhammed</option>
+          </select>
+
+          <button>Submit</button>
+
+          <p>{title}</p>
+          <p>{body}</p>
+          <p>{author}</p>
+        </form>
       </div>
     </div>
   );
